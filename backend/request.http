@@ -1,37 +1,36 @@
-GET http://localhost:3000/http-codes
+@jwtRomain = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3RuYW1lIjoiUm9tYWluIFBpZXJ1Y2NpIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjU4NjgxNjI5LCJleHAiOjE2OTAyMzkyMjl9.NqoclrO2feKdh90on_4Ien7m0b2-aKbPp8WroRRnAck
+@jwtSylvain = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZmlyc3RuYW1lIjoiU3lsdmFpbiBCb3VkYWNoZXIiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjU4NjgxNjQ3LCJleHAiOjE2OTAyMzkyNDd9.S_KsEBvxmw3y4cBoIMOGk_mAgwMe3fFBh8uCh4of36k
+@romainId = 1 
+@sylvainId = 2
+@verificationToken = a81f3ef4a8b9671daf7b76f28ce13aedc1020eeb74c8689a14d6fa268ea2c4db7c891ae0e824cea844e5e2afed73b626c53d1000f655e4c43fffb654d3edbafd
+@chatId = 62dd5b566a13d1f6925421d9
+@messageId = 62dd5db8e165ea175c0f5600
+
+### 
+GET http://google.com
+
+### 
+GET http://localhost:9000/test
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+Connection: keep-alive
+
+### 
+GET http://localhost:9000
+
+
+# -- USERS -- #
+
 
 ###
-POST http://localhost:3000/http-codes
-Content-Type: application/json
-
-{
-    "code": 200,
-    "message": "OK"
-}
+GET http://localhost:5000/users
+Authorization: Bearer {{jwtRomain}}
 
 ###
-GET http://localhost:3000/http-codes/62d2ac2dc66ce35eed339483
+GET http://localhost:5000/users/1
 
 ###
-PUT http://localhost:3000/http-codes/62d2ac2dc66ce35eed339483
-Content-Type: application/json
-
-{
-    "code": 200,
-    "message": "ok"
-}
-###
-DELETE http://localhost:3000/http-codes/62b989c6b1d4a19ea9b679bd
-
-###
-GET http://localhost:3000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZmlyc3RuYW1lIjoiT0siLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2NTY0OTM3MDMsImV4cCI6MTY4ODA1MTMwM30.IjBfkDbswLuVq1z1ta5G9oynrJC0jTRe5znvQVLRh5k
-
-###
-GET http://localhost:3000/users/1
-
-###
-POST http://localhost:3000/users
+POST http://localhost:5000/users
 Content-Type: application/json
 
 {
@@ -41,7 +40,7 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:3000/users/2
+PUT http://localhost:5000/users/2
 Content-Type: application/json
 
 {
@@ -49,24 +48,210 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/users/3
+DELETE http://localhost:5000/users/3
+
+
+# -- SECURITY -- #
 
 
 ###
-POST http://localhost:3000/register
+POST http://localhost:5000/register
 Content-Type: application/json
 
 {
-    "email": "ok2@ok.com",
+    "email": "pierucci.romain@gmail.com",
     "password": "OKOKOK",
-    "firstname": "OK"
+    "firstname": "Romain Pierucci",
+    "classroom": "4IW2",
+    "technologies": 
+    [
+        {
+            "name": "Node JS",
+            "isChecked": true  
+        },
+        {
+            "name": "React",
+            "isChecked": true  
+        },
+        {
+            "name": "Angular",
+            "isChecked": false  
+        }
+    ]
 }
 
 ###
-POST http://localhost:3000/login
+POST http://localhost:5000/register
 Content-Type: application/json
 
 {
-    "email": "ok2@ok.com",
+    "email": "sylvain.boudacher@gmail.com",
+    "password": "OKOKOK",
+    "firstname": "Sylvain Boudacher",
+    "classroom": "4IW2",
+    "technologies": 
+    [
+        {
+            "name": "Node JS",
+            "isChecked": false  
+        },
+        {
+            "name": "React",
+            "isChecked": true  
+        },
+        {
+            "name": "Angular",
+            "isChecked": false  
+        }
+    ]
+}
+
+###
+POST http://localhost:5000/register
+Content-Type: application/json
+
+{
+    "email": "test@test.com",
+    "password": "OKOKOK",
+    "firstname": "Test Icule",
+    "classroom": "4IW3",
+    "technologies": 
+    [
+        {
+            "name": "Node JS",
+            "isChecked": false  
+        },
+        {
+            "name": "React",
+            "isChecked": false  
+        },
+        {
+            "name": "Angular",
+            "isChecked": true  
+        }
+    ]
+}
+
+###
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "pierucci.romain@gmail.com",
     "password": "OKOKOK"
+}
+
+###
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "sylvain.boudacher@gmail.com",
+    "password": "OKOKOK"
+}
+
+###
+GET http://localhost:5000/verify/{{verificationToken}}
+
+###
+POST http://localhost:5000/make-reset-password-request
+Content-Type: application/json
+
+{
+    "email": "pierucci.romain@gmail.com"
+}
+
+
+###
+POST http://localhost:5000/reset-password/1c373e69e8c39f2b73f467c26be8b5e1e8e02426284a098c1888d5794622c83389787803d84e2dfbca8a13e07917b2d09e0565200350d149dc60c7a55baff4a4
+Content-Type: application/json
+
+{
+
+}
+
+
+###
+POST http://localhost:5000/reset-password/1c373e69e8c39f2b73f467c26be8b5e1e8e02426284a098c1888d5794622c83389787803d84e2dfbca8a13e07917b2d09e0565200350d149dc60c7a55baff4a4
+Content-Type: application/json
+
+{
+    "password": "megatestouille"
+}
+
+
+
+# -- RELATIONS -- #
+
+
+###
+POST http://localhost:5000/make-friend-request
+Authorization: Bearer {{jwtRomain}}
+Content-Type: application/json
+
+{
+    "from": {{romainId}},
+    "to": {{sylvainId}}
+}
+
+###
+POST http://localhost:5000/my-friend-requests
+Authorization: Bearer {{jwtSylvain}}
+Content-Type: application/json
+
+{
+    "userId": {{sylvainId}}
+}
+
+###
+POST http://localhost:5000/accept-friend-request
+Authorization: Bearer {{jwtSylvain}}
+Content-Type: application/json
+
+{
+    "relationId": 1
+}
+
+###
+POST http://localhost:5000/remove-friend
+Authorization: Bearer {{jwtRomain}}
+Content-Type: application/json
+
+{
+    "friendId": {{sylvainId}}
+}
+
+# -- CHATS -- #
+
+###
+POST http://localhost:5000/chats/new
+Authorization: Bearer {{jwtRomain}}
+Content-Type: application/json
+
+{
+    "friendId": {{sylvainId}}
+}
+
+
+###
+GET http://localhost:5000/chats/{{chatId}}
+Authorization: Bearer {{jwtRomain}}
+
+###
+POST http://localhost:5000/chats/{{chatId}}/send-new-message
+Authorization: Bearer {{jwtRomain}}
+Content-Type: application/json
+
+{
+    "content": "Alors peut etre ?",
+    "senderId": {{romainId}}
+}
+
+###
+POST http://localhost:5000/chats/delete-message
+Authorization: Bearer {{jwtRomain}}
+Content-Type: application/json
+
+{
+    "messageId": "62dd77d6e58d675d21b9cb82"
 }

@@ -11,8 +11,10 @@ module.exports = async (req, res, next) => {
     return res.sendStatus(401);
   }
   const user = await checkToken(token);
+
   if (user) {
-    req.user = await User.findByPk(user.id);
+    const userFromDB = await User.findByPk(user.id);
+    req.user = userFromDB;
     next();
   } else {
     res.sendStatus(401);

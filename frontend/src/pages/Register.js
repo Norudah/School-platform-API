@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import PrimaryButton from "../components/Buttons/PrimaryButton";
 import Select from "react-select";
 import { Checkbox } from "@nextui-org/react";
+import { useRequest } from "../hooks/useRequest";
+import axios from "axios";
 
 const options = [
   { value: "4IW1", label: "4IW1" },
@@ -32,6 +34,8 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
   const [checkedState, setCheckedState] = useState(new Array(toppings.length).fill(false));
+  const [response, error, loading, makeRequest] = useRequest();
+  const [registerStatus, setRegisterStatus] = useState("ya rien");
 
   const technologies = [
     {
@@ -76,19 +80,50 @@ const Register = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (password === confirmPassword) {
       console.log("success");
     } else {
       console.log("error");
     }
-    console.log(email, password, confirmPassword, nickname, selectedOption, technologies);
+
+    console.log(email, password, confirmPassword, nickname, selectedOption.value, technologies);
+
+    const result = await axios.post("http://localhost:9000/register", {
+      email: email,
+      password: password,
+      firstname: nickname,
+      classroom: selectedOption.value,
+      technologies: technologies,
+    });
+
+    console.log("result");
+    console.log(result);
+
+    result.status !== 201 ? setRegisterStatus("ça marche pas") : setRegisterStatus("OUI");
+
+    // console.log(makeRequest);
+    // await makeRequest({
+    //   method: "GET",
+    //   url: "/test",
+    // });
+    // console.log("USE REQUEST TEST");
+    // console.log(response, error, loading);
   };
+
+  // useEffect(() => {
+  //   console.log("C LA");
+  //   axios.get("http://localhost:9000/test").then((result) => console.log(result));
+
+  //   console.log("TEST ENV");
+  //   console.log(process.env.REACT_APP_API_URL);
+  // }, []);
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <h1>Status : {registerStatus}</h1>
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">

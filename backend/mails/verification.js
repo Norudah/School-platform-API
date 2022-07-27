@@ -8,7 +8,7 @@ const getMessage = (toEmail, token) => {
     from: "g7.project.react.node@gmail.com",
     subject: "Bienvenu ! Veuillez vérifier votre compte",
     text: "Message de description de vérification de compte",
-    html: `<p>Bienvenu ! Cliquez pour valider votre inscription :</p><a href="http://localhost:5000/verify/${token}">ICI</a>`,
+    html: `<p>Bienvenu ! Cliquez pour valider votre inscription :</p><a href="http://localhost:3000/verifyEmail/${token}">ICI</a>`,
   };
 };
 

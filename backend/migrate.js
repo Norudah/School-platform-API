@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { sequelize } = require("./models/postgres");
 
 sequelize.sync({ alter: true }).then(() => {

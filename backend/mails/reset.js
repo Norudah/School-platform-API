@@ -8,7 +8,7 @@ const getMessage = (toEmail, token) => {
     from: "g7.project.react.node@gmail.com",
     subject: "Demande de reset de votre mot de passe",
     text: "Message de description de reset de compte",
-    html: `<p>Clique sur le lien suivant pour réinitialiser votre mot de passe :</p><a href="http://localhost:5000/request-password/${token}">ICI</a>`,
+    html: `<p>Clique sur le lien suivant pour réinitialiser votre mot de passe :</p><a href="http://localhost:3000/resetPassword/${token}">ICI</a>`,
   };
 };
 

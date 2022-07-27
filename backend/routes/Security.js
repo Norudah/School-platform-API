@@ -72,7 +72,7 @@ router.post("/register", async (req, res) => {
     });
 
     // TODO: Reactiver pour la mise en prod
-    // sendMail.sendInscriptionEmail(newUser.email, newUser.verificationToken);
+    sendMail.sendInscriptionEmail(newUser.email, newUser.verificationToken);
 
     res.status(201).json({
       ...user,

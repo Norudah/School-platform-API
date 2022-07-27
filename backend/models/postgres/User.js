@@ -6,6 +6,13 @@ class User extends Model {}
 
 User.init(
   {
+    id: {
+      type: DataTypes.INTEGER,
+      field: "id",
+      autoIncrement: true,
+      allowNull: false,
+      primaryKey: true,
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -29,6 +36,19 @@ User.init(
       defaultValue: false,
       allowNull: false,
     },
+    isVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
+    },
+    verificationToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    resetToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     firstname: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -37,6 +57,11 @@ User.init(
           min: 2,
         },
       },
+    },
+    classroom: {
+      type: DataTypes.ENUM,
+      values: ["4IW1", "4IW2", "4IW3"],
+      allowNull: true,
     },
   },
   {
@@ -50,10 +75,7 @@ User.addHook("beforeCreate", async (user) => {
 });
 User.addHook("beforeUpdate", async (user, { fields }) => {
   if (fields.includes("password")) {
-    user.password = await bcryptjs.hash(
-      user.password,
-      await bcryptjs.genSalt()
-    );
+    user.password = await bcryptjs.hash(user.password, await bcryptjs.genSalt());
   }
 });
 

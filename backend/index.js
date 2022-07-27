@@ -4,6 +4,7 @@ const port = process.env.PORT || 3000;
 const app = express();
 const HttpCodesRouter = require("./routes/HttpCode");
 const UserRouter = require("./routes/User");
+const ChatRouter = require("./routes/Chat");
 const RelationRouter = require("./routes/Relation");
 const SecurityRouter = require("./routes/Security");
 const checkAuthentication = require("./middlewares/checkAuthentication");
@@ -28,5 +29,6 @@ app.use(SecurityRouter);
 app.use(checkAuthentication, RelationRouter);
 app.use("/http-codes", HttpCodesRouter);
 app.use("/users", checkAuthentication, UserRouter);
+app.use("/chats", checkAuthentication, ChatRouter);
 
 app.listen(port, () => console.log(`Server started ${port}`));

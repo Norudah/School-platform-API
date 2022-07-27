@@ -1,6 +1,6 @@
 const { Router } = require("express");
-const { User, Post } = require("../models/postgres");
-const { ValidationError } = require("sequelize");
+const { User, Relation } = require("../models/postgres");
+const { ValidationError, Op } = require("sequelize");
 const checkIsAdmin = require("../middlewares/checkIsAdmin");
 
 const router = new Router();
@@ -12,37 +12,72 @@ const formatError = (validationError) => {
   }, {});
 };
 
-router.get("/", checkIsAdmin, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const { page = 1, perPage = 10, ...criteria } = req.query;
     const result = await User.findAll({
-      where: criteria,
-      limit: perPage,
-      offset: (page - 1) * perPage,
-      include: [
-        { model: Post, as: "posts", limit: 2, order: [["createdAt", "DESC"]] },
-      ],
+      where: {
+        isVerified: true,
+        id: {
+          [Op.ne]: req.user.dataValues.id,
+        },
+      },
     });
-    res.json(result);
+    res.status(200).json(result);
+    return;
   } catch (error) {
     res.sendStatus(500);
     console.error(error);
   }
 });
 
-router.post("/", checkIsAdmin, async (req, res) => {
+router.get("/my-friends", async (req, res) => {
   try {
-    const result = await User.create(req.body);
-    res.status(201).json(result);
+    const userId = req.user.dataValues.id;
+    const result = await User.findAll({
+      where: {
+        isVerified: true,
+      },
+    });
+
+    // const result = await User.findAll({
+    //   include: {
+    //     model: Relation,
+    //     through: { attributes: [] },
+    //     where: {
+    //       [Op.or]: {
+    //         fromId: userId,
+    //         to: userId,
+    //       },
+    //     },
+    //   },
+    //   where: {
+    //     isVerified: true,
+    //     id: {
+    //       [Op.ne]: req.user.dataValues.id,
+    //     },
+    //   },
+    // });
+    res.status(200).json(result);
+    return;
   } catch (error) {
-    if (error instanceof ValidationError) {
-      res.status(422).json(formatError(error));
-    } else {
-      res.sendStatus(500);
-      console.error(error);
-    }
+    res.sendStatus(500);
+    console.error(error);
   }
 });
+
+// router.post("/", checkIsAdmin, async (req, res) => {
+//   try {
+//     const result = await User.create(req.body);
+//     res.status(201).json(result);
+//   } catch (error) {
+//     if (error instanceof ValidationError) {
+//       res.status(422).json(formatError(error));
+//     } else {
+//       res.sendStatus(500);
+//       console.error(error);
+//     }
+//   }
+// });
 
 router.get("/:id", async (req, res) => {
   try {
